@@ -43,8 +43,13 @@ class _MyAppState extends State<MyApp> {
 
   Future<String> _registerUser(LoginData data) async {
     try {
+      Map<String, dynamic> userAttributes = {
+        "email": data.name,
+      };
       SignUpResult res = await Amplify.Auth.signUp(
-          username: data.name, password: data.password);
+          username: data.name, password: data.password,options: CognitoSignUpOptions(
+              userAttributes: userAttributes
+          ));
       setState(() {
         isSignUpComplete = res.isSignUpComplete;
         print("sing up " + (isSignUpComplete ? "completed" : "not completed"));
@@ -84,10 +89,11 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: FlutterLogin(
+          logo: "images/logo.jpg",
       onSignup: _registerUser,
       onLogin: _loginUser,
       onRecoverPassword: (_) => null,
-      title: "AWS Amplify",
-    ));
+      title: 'AWS Amplify',
+    ),);
   }
 }
